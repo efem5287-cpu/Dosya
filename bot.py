@@ -11,9 +11,9 @@ server = Flask(__name__)
 def home():
     return "Bot aktif ve çalışıyor!"
 
-# --- BOT VE API BİLGİLERİ ---
-API_ID = int(os.environ.get("API_ID", 1234567))  # İstersen buraya doğrudan sayı olarak yazabilirsin
-API_HASH = os.environ.get("API_HASH", "buraya_api_hash_yaz")  # My.telegram.org'dan aldığın hash
+# --- BİLGİLERİNİZ ---
+API_ID = 35762182
+API_HASH = "126917ba7359f8cddb0780ad16e0b1ba"
 BOT_TOKEN = "8822219525:AAFVve49cyixXgbTVRYKsxzQsht-NuXMaMw"
 VT_API_KEY = "Dd879532277e4c9e19490a5c4e348ab1f714d03792b4046e7b017aa9d36d38aa"
 
@@ -118,4 +118,4 @@ if __name__ == "__main__":
     import threading
     threading.Thread(target=lambda: server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))).start()
     app.run()
-      
+    
