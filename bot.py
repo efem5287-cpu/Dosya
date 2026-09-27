@@ -2,16 +2,22 @@ import os
 import requests
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
-from flask import Flask
+from aiohttp import web
 
-# --- FLASK (Render'ın botu uyutmaması için) ---
-server = Flask(__name__)
+# --- RENDER İÇİN WEB SUNUCUSU (Aiohttp) ---
+async def handle(request):
+    return web.Response(text="Bot aktif ve çalışıyor!")
 
-@server.route('/')
-def home():
-    return "Bot aktif ve çalışıyor!"
+async def web_server():
+    app_web = web.Application()
+    app_web.add_routes([web.get('/', handle)])
+    runner = web.AppRunner(app_web)
+    await runner.setup()
+    port = int(os.environ.get("PORT", 10000))
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
 
-# --- BİLGİLERİNİZ ---
+# --- BİLGİLER ---
 API_ID = 35762182
 API_HASH = "126917ba7359f8cddb0780ad16e0b1ba"
 BOT_TOKEN = "8822219525:AAFVve49cyixXgbTVRYKsxzQsht-NuXMaMw"
@@ -114,8 +120,16 @@ async def scan_handler(client: Client, message: Message):
         if os.path.exists(file_path):
             os.remove(file_path)
 
+async def main():
+    # Web sunucusunu başlat (Render uyutmasın diye)
+    await web_server()
+    # Botu başlat
+    await app.start()
+    print("Bot başarıyla başlatıldı!")
+    # Botun kapanmaması için askıda tut
+    await asyncio.Event().wait()
+
 if __name__ == "__main__":
-    import threading
-    threading.Thread(target=lambda: server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))).start()
-    app.run()
+    import asyncio
+    asyncio.run(main())
     
